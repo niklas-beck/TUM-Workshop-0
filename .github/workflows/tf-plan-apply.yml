@@ -69,10 +69,10 @@ jobs:
         --xml)" >> $GITHUB_OUTPUT
       id: getPublishProfile
 
-    - name: Setup Python 3.10 Environment
+    - name: Setup Python 3.9 Environment
       uses: actions/setup-python@v4
       with:
-        python-version: 3.10
+        python-version: 3.9
 
     - name: 'Resolve Project Dependencies Using Pip'
       shell: bash
