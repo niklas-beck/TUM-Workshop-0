@@ -15,6 +15,10 @@ resource "azurerm_application_insights" "logging" {
   resource_group_name = data.azurerm_resource_group.rg.name
   location            = data.azurerm_resource_group.rg.location
   application_type    = "web"
+
+  tags = {
+    "CostCenter" = "SpikeReply"
+  }
 }
 
 resource "azurerm_storage_account" "fxnstor" {
@@ -24,6 +28,10 @@ resource "azurerm_storage_account" "fxnstor" {
   account_tier             = "Standard"
   account_replication_type = "LRS"
   account_kind             = "StorageV2"
+
+  tags = {
+    "CostCenter" = "SpikeReply"
+  }
 }
 
 resource "azurerm_service_plan" "fxnapp" {
@@ -32,6 +40,10 @@ resource "azurerm_service_plan" "fxnapp" {
   resource_group_name = data.azurerm_resource_group.rg.name
   os_type             = "Linux"
   sku_name            = "Y1"
+
+  tags = {
+    "CostCenter" = "SpikeReply"
+  }
 }
 
 resource "azurerm_linux_function_app" "fxn" {
@@ -43,6 +55,10 @@ resource "azurerm_linux_function_app" "fxn" {
   storage_account_access_key = azurerm_storage_account.fxnstor.primary_access_key
 
   site_config {}
+
+  tags = {
+    "CostCenter" = "SpikeReply"
+  }
 }
 
 

@@ -57,8 +57,8 @@ jobs:
     - name: get Terraform Output
       id: TFoutput
       run: |
-        echo "RG_NAME=$(terraform output resource_group_name)" >> $GITHUB_OUTPUT
-        echo "FUNC_APP_NAME=$(terraform output func_app_name)" >> $GITHUB_OUTPUT
+        echo "RG_NAME=$(terraform output -raw resource_group_name)" >> $GITHUB_OUTPUT
+        echo "FUNC_APP_NAME=$(terraform output -raw func_app_name)" >> $GITHUB_OUTPUT
 
 
     # login to Azure to deploy function app
