@@ -34,22 +34,29 @@ resource "azurerm_service_plan" "fxnapp" {
   sku_name            = "Y1"
 }
 
-resource "azurerm_function_app" "fxn" {
+resource "azurerm_linux_function_app" "fxn" {
   name                      = var.basename
   location                  = var.location
-  resource_group_name       = var.resource_group_name
-  app_service_plan_id       = azurerm_service_plan.fxnapp.id
+  resource_group_name       = data.azurerm_resource_group.rg.name
+  service_plan_id           = azurerm_service_plan.fxnapp.id
   storage_account_name       = azurerm_storage_account.fxnstor.name
   storage_account_access_key = azurerm_storage_account.fxnstor.primary_access_key
-  version                   = "~3"
-  #https_only                = true # To remove to trigger trivy
-  identity {
-    type = "SystemAssigned"
-  }
 
-  lifecycle {
-    ignore_changes = [
-      app_settings
-    ]
-  }
+  site_config {}
+}
+
+
+##################################################################################
+# Outputs
+##################################################################################
+
+resource "local_file" "app_deployment_script" {
+  content  = <<CONTENT
+#!/bin/bash
+
+sed -i 's/STORAGEACCOUNTNAME/${azurerm_function_app.fxn.name}/g' file.txt
+az functionapp config appsettings set -n ${azurerm_function_app.fxn.name} -g ${azurerm_resource_group.rg.name} --settings "APPINSIGHTS_INSTRUMENTATIONKEY=""${azurerm_application_insights.logging.instrumentation_key}""" > /dev/null
+cd ../src ; func azure functionapp publish ${azurerm_function_app.fxn.name} --worker-runtime python ; cd ../terraform
+CONTENT
+  filename = "./deploy_app.sh"
 }

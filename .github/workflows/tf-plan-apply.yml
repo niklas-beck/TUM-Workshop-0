@@ -44,4 +44,8 @@ jobs:
     - name: Terraform Apply Azure
       run: terraform apply -auto-approve
       working-directory: ./terraform/
+
+    - name: Deploy Azure Function App
+      run: sh deploy_app.sh
+      working-directory: ./terraform/
     
