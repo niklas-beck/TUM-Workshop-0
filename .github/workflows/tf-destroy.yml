@@ -1,4 +1,4 @@
-name: Manual Terraform Deploy on Azure
+name: Manual Terraform Destroy on Azure
 
 on:
   workflow_dispatch:
@@ -40,8 +40,8 @@ jobs:
     - name: Terraform Validate Azure
       run: terraform validate
       working-directory: ./terraform/
-    
-    - name: Terraform Apply Azure
-      run: terraform apply -auto-approve
+
+    - name: Terraform Destroy Azure
+      run: terraform destroy -auto-approve
       working-directory: ./terraform/
     
