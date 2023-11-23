@@ -80,7 +80,7 @@ jobs:
       uses: Azure/functions-action@v1
       with:
         package: "./scr/"
-        app-name: ${{ steps.TFoutput.outputs.FUNC_APP_NAME }}
+        app-name: ${{ steps.apply.outputs.FUNC_APP_NAME }}
         publish-profile: ${{ steps.getPublishProfile.outputs.PUBLISH_PROFILE }}
         scm-do-build-during-deployment: true
         enable-oryx-build: true
