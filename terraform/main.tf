@@ -50,6 +50,10 @@ resource "azurerm_linux_function_app" "fxn" {
 # Outputs
 ##################################################################################
 
+output "resource_group_name" {
+  value = data.azurerm_resource_group.rg.name
+}
+
 output "func_app_name" {
   value   = azurerm_linux_function_app.fxn.name
 }
