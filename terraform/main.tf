@@ -1,4 +1,14 @@
 ##################################################################################
+# GET RESOURCE GROUP
+##################################################################################
+
+data "azurerm_resource_group" "rg" {
+  name     = var.resource_group_name
+  location = var.location
+}
+
+
+##################################################################################
 # Function App
 ##################################################################################
 resource "azurerm_application_insights" "logging" {
@@ -6,10 +16,6 @@ resource "azurerm_application_insights" "logging" {
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   application_type    = "web"
-  tags = {
-    sample = "functions-storage-managed-identity"
-    "CostCenter" = "SpikeReply"
-  }
 }
 
 resource "azurerm_storage_account" "fxnstor" {
@@ -19,10 +25,6 @@ resource "azurerm_storage_account" "fxnstor" {
   account_tier             = "Standard"
   account_replication_type = "LRS"
   account_kind             = "StorageV2"
-  tags = {
-    sample = "functions-storage-managed-identity"
-    "CostCenter" = "SpikeReply"
-  }
 }
 
 resource "azurerm_app_service_plan" "fxnapp" {
@@ -33,10 +35,6 @@ resource "azurerm_app_service_plan" "fxnapp" {
   sku {
     tier = "Dynamic"
     size = "Y1"
-  }
-  tags = {
-    sample = "functions-storage-managed-identity"
-    "CostCenter" = "SpikeReply"
   }
 }
 
@@ -57,9 +55,5 @@ resource "azurerm_function_app" "fxn" {
     ignore_changes = [
       app_settings
     ]
-  }
-  tags = {
-    sample = "functions-storage-managed-identity"
-    "CostCenter" = "SpikeReply"
   }
 }
