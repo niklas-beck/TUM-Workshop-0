@@ -57,6 +57,7 @@ jobs:
     - name: get Terraform Output
       id: TFoutput
       run: |
+        terraform output -raw resource_group_name
         echo "RG_NAME=$(terraform output -raw resource_group_name)" >> $GITHUB_OUTPUT
         echo "FUNC_APP_NAME=$(terraform output -raw func_app_name)" >> $GITHUB_OUTPUT
 
