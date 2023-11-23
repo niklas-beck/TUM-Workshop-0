@@ -53,17 +53,9 @@ jobs:
       id: apply
       run: |
         terraform apply -auto-approve
-        terraform output -raw resource_group_name
         echo "RG_NAME=$(terraform output -raw resource_group_name)" >> $GITHUB_OUTPUT
         echo "FUNC_APP_NAME=$(terraform output -raw func_app_name)" >> $GITHUB_OUTPUT
       working-directory: ./terraform/
-
-    - name: get Terraform Output
-      id: TFoutput
-      run: |
-        terraform output -raw resource_group_name
-        echo "RG_NAME=$(terraform output -raw resource_group_name)" >> $GITHUB_OUTPUT
-        echo "FUNC_APP_NAME=$(terraform output -raw func_app_name)" >> $GITHUB_OUTPUT
 
 
     # login to Azure to deploy function app
@@ -78,8 +70,8 @@ jobs:
     - name: Get Publish Profile
       run: >
         echo "PUBLISH_PROFILE=$(az webapp deployment list-publishing-profiles 
-        -g ${{ steps.TFoutput.outputs.RG_NAME }} 
-        -n ${{ steps.TFoutput.outputs.FUNC_APP_NAME }} 
+        -g ${{ steps.apply.outputs.RG_NAME }} 
+        -n ${{ steps.apply.outputs.FUNC_APP_NAME }} 
         --xml)" >> $GITHUB_OUTPUT
       id: getPublishProfile
 
