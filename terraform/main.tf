@@ -4,7 +4,6 @@
 
 data "azurerm_resource_group" "rg" {
   name     = var.resource_group_name
-  location = var.location
 }
 
 
@@ -13,14 +12,14 @@ data "azurerm_resource_group" "rg" {
 ##################################################################################
 resource "azurerm_application_insights" "logging" {
   name                = "${var.basename}-ai"
-  resource_group_name = azurerm_resource_group.rg.name
-  location            = azurerm_resource_group.rg.location
+  resource_group_name = data.azurerm_resource_group.rg.name
+  location            = data.azurerm_resource_group.rg.location
   application_type    = "web"
 }
 
 resource "azurerm_storage_account" "fxnstor" {
   name                     = "${var.basename}fx"
-  resource_group_name      = azurerm_resource_group.rg.name
+  resource_group_name      = data.azurerm_resource_group.rg.name
   location                 = var.location
   account_tier             = "Standard"
   account_replication_type = "LRS"
@@ -30,7 +29,7 @@ resource "azurerm_storage_account" "fxnstor" {
 resource "azurerm_app_service_plan" "fxnapp" {
   name                = "${var.basename}-plan"
   location            = var.location
-  resource_group_name = azurerm_resource_group.rg.name
+  resource_group_name = data.azurerm_resource_group.rg.name
   kind                = "functionapp"
   sku {
     tier = "Dynamic"
