@@ -35,7 +35,7 @@ resource "azurerm_service_plan" "fxnapp" {
 }
 
 resource "azurerm_linux_function_app" "fxn" {
-  name                      = var.basename
+  name                      = "funcApp-${var.basename}"
   location                  = var.location
   resource_group_name       = data.azurerm_resource_group.rg.name
   service_plan_id           = azurerm_service_plan.fxnapp.id
@@ -50,12 +50,6 @@ resource "azurerm_linux_function_app" "fxn" {
 # Outputs
 ##################################################################################
 
-resource "local_file" "app_deployment_script" {
-  content  = <<CONTENT
-#!/bin/bash
-
-az functionapp config appsettings set -n ${azurerm_linux_function_app.fxn.name} -g ${data.azurerm_resource_group.rg.name} --settings "APPINSIGHTS_INSTRUMENTATIONKEY=""${azurerm_application_insights.logging.instrumentation_key}""" > /dev/null
-cd ../src ; func azure functionapp publish ${azurerm_linux_function_app.fxn.name} --worker-runtime python ; cd ../terraform
-CONTENT
-  filename = "./deploy_app.sh"
+output "func_app_name" {
+  value   = azurerm_linux_function_app.fxn.name
 }

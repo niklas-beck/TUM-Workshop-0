@@ -15,6 +15,7 @@ env:
   ARM_CLIENT_ID: "${{ secrets.AZURE_CLIENT_ID }}"
   ARM_SUBSCRIPTION_ID: "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
   ARM_TENANT_ID: "${{ secrets.AZURE_TENANT_ID }}"
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: './src/'
 
 jobs:
   terraform:
@@ -23,8 +24,8 @@ jobs:
     env:
       #this is needed since we are running terraform with read-only permissions
       ARM_SKIP_PROVIDER_REGISTRATION: true
-    outputs:
-      tfplanExitCode: ${{ steps.tf-plan.outputs.exitcode }}
+    #outputs:
+    #  tfplanExitCode: ${{ steps.tf-plan.outputs.exitcode }}
   
     steps:
     - name: Checkout
@@ -33,17 +34,24 @@ jobs:
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v2
     
-    - name: Terraform Init Azure
+    - name: Terraform Init
       run: terraform init
       working-directory: ./terraform/
     
-    - name: Terraform Validate Azure
+    - name: Terraform Validate
       run: terraform validate
       working-directory: ./terraform/
-    
-    - name: Terraform Apply Azure
+
+    - name: Terraform Plan
+      id: plan
+      run: terraform plan
+      working-directory: ./terraform/
+
+    - name: Terraform Apply
+      id: apply
       run: terraform apply -auto-approve
       working-directory: ./terraform/
+
 
     # login to Azure to deploy function app
     - name: Az CLI login
@@ -52,10 +60,21 @@ jobs:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          
-    - name: Deploy Azure Function App
+
+    # get publish profile
+    - name: Get Publish Profile
       run: |
-        sh deploy_app.sh
-      working-directory: ./terraform/
+        echo "::set-output name=PUBLISH_PROFILE::$(az webapp deployment list-publishing-profiles -g 'resource-group-name' -n 'app-service-name' --xml)"
+      id: getPublishProfile
+
+    # publish code to function App
+    - name: 'Run Azure Functions Action'
+      uses: Azure/functions-action@v1
+      with:
+        package: "./scr/"
+        app-name: ${{ steps.plan.outputs.func_app_name }}
+        publish-profile: ${{ steps.getPublishProfile.outputs.PUBLISH_PROFILE }}
+        scm-do-build-during-deployment: true
+        enable-oryx-build: true
     
     
