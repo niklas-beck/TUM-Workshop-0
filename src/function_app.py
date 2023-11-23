@@ -3,7 +3,7 @@ import logging
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 
-@app.route(route="tum_workshop_func")
+@app.route(route="/test")
 def tum_workshop_func(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
 
