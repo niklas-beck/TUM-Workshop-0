@@ -26,15 +26,12 @@ resource "azurerm_storage_account" "fxnstor" {
   account_kind             = "StorageV2"
 }
 
-resource "azurerm_app_service_plan" "fxnapp" {
+resource "azurerm_service_plan" "fxnapp" {
   name                = "${var.basename}-plan"
   location            = var.location
   resource_group_name = data.azurerm_resource_group.rg.name
-  kind                = "functionapp"
-  sku {
-    tier = "Dynamic"
-    size = "Y1"
-  }
+  os_type             = "Linux"
+  sku_name            = "Y1"
 }
 
 resource "azurerm_function_app" "fxn" {
