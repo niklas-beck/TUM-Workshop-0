@@ -75,4 +75,6 @@ jobs:
       with:
         #package: "../scr/"
         app-name: ${{ steps.apply.outputs.FUNC_APP_NAME }}
-        publish-profile: ${{ steps.getPublishProfile.outputs.PUBLISH_PROFILE }}
+        publish-profile: "::add-mask::${{ steps.getPublishProfile.outputs.PUBLISH_PROFILE }}"
+        scm-do-build-during-deployment: true
+        enable-oryx-build: true
