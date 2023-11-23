@@ -54,7 +54,6 @@ resource "local_file" "app_deployment_script" {
   content  = <<CONTENT
 #!/bin/bash
 
-sed -i 's/STORAGEACCOUNTNAME/${azurerm_linux_function_app.fxn.name}/g' file.txt
 az functionapp config appsettings set -n ${azurerm_linux_function_app.fxn.name} -g ${data.azurerm_resource_group.rg.name} --settings "APPINSIGHTS_INSTRUMENTATIONKEY=""${azurerm_application_insights.logging.instrumentation_key}""" > /dev/null
 cd ../src ; func azure functionapp publish ${azurerm_linux_function_app.fxn.name} --worker-runtime python ; cd ../terraform
 CONTENT

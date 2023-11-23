@@ -17,8 +17,8 @@ env:
   ARM_TENANT_ID: "${{ secrets.AZURE_TENANT_ID }}"
 
 jobs:
-  terraform-plan:
-    name: 'Terraform Plan'
+  terraform:
+    name: 'Terraform'
     runs-on: ubuntu-latest
     env:
       #this is needed since we are running terraform with read-only permissions
@@ -45,7 +45,17 @@ jobs:
       run: terraform apply -auto-approve
       working-directory: ./terraform/
 
+    # login to Azure to deploy function app
+    - name: Az CLI login
+      uses: azure/login@v1
+      with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          
     - name: Deploy Azure Function App
-      run: sh deploy_app.sh
+      run: |
+        sh deploy_app.sh
       working-directory: ./terraform/
+    
     
