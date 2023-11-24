@@ -54,7 +54,18 @@ resource "azurerm_linux_function_app" "fxn" {
   storage_account_name       = azurerm_storage_account.fxnstor.name
   storage_account_access_key = azurerm_storage_account.fxnstor.primary_access_key
 
-  site_config {}
+  site_config {
+    application_insights_key               = azurerm_application_insights.logging.instrumentation_key
+    application_insights_connection_string = azurerm_application_insights.logging.connection_string
+    application_stack {
+      python_version = "3.7"
+    }
+  }
+
+  app_settings = {
+    APPINSIGHTS_INSTRUMENTATIONKEY = azurerm_application_insights.logging.instrumentation_key
+    SCM_DO_BUILD_DURING_DEPLOYMENT = true
+  }
 
   tags = {
     "CostCenter" = "SpikeReply"
@@ -63,13 +74,15 @@ resource "azurerm_linux_function_app" "fxn" {
 
 
 ##################################################################################
-# Outputs
+# Publishing python script as function app
 ##################################################################################
 
-output "resource_group_name" {
-  value = data.azurerm_resource_group.rg.name
-}
+resource "local_file" "app_deployment_script" {
+  content  = <<CONTENT
+#!/bin/bash
 
-output "func_app_name" {
-  value   = azurerm_linux_function_app.fxn.name
+az functionapp config appsettings set -n ${azurerm_linux_function_app.fxn.name} -g ${azurerm_resource_group.rg.name} --settings "APPINSIGHTS_INSTRUMENTATIONKEY=""${azurerm_application_insights.logging.instrumentation_key}""" > /dev/null
+cd .. ; func azure functionapp publish ${azurerm_linux_function_app.fxn.name} --python --linux-fx-version "PYTHON|3.9" ; cd terraform
+CONTENT
+  filename = "./deploy_function_app.sh"
 }
