@@ -15,7 +15,7 @@ env:
 
 jobs:
   terraform:
-    name: 'Terraform Plan Apply'
+    name: 'Terraform Apply'
     runs-on: ubuntu-latest
     env:
       #this is needed since we are running terraform with read-only permissions
@@ -36,11 +36,6 @@ jobs:
     
     - name: Terraform Validate
       run: terraform validate
-      working-directory: ./terraform/
-
-    - name: Terraform Plan
-      id: plan
-      run: terraform plan
       working-directory: ./terraform/
 
     - name: Terraform Apply

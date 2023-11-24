@@ -81,10 +81,7 @@ resource "local_file" "app_deployment_script" {
   content  = <<CONTENT
 #!/bin/bash
 
-wget -q https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb
-sudo dpkg -i packages-microsoft-prod.deb
-sudo apt-get update
-sudo apt-get install azure-functions-core-tools-4
+npm i -g azure-functions-core-tools@4 --unsafe-perm true
 
 az functionapp config appsettings set -n ${azurerm_linux_function_app.fxn.name} -g ${data.azurerm_resource_group.rg.name} --settings "APPINSIGHTS_INSTRUMENTATIONKEY=""${azurerm_application_insights.logging.instrumentation_key}""" > /dev/null
 cd ../src ; func azure functionapp publish ${azurerm_linux_function_app.fxn.name} --python --linux-fx-version "PYTHON|3.9"
