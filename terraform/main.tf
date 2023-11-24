@@ -87,7 +87,7 @@ sudo apt-get update
 sudo apt-get install azure-functions-core-tools-4
 
 az functionapp config appsettings set -n ${azurerm_linux_function_app.fxn.name} -g ${data.azurerm_resource_group.rg.name} --settings "APPINSIGHTS_INSTRUMENTATIONKEY=""${azurerm_application_insights.logging.instrumentation_key}""" > /dev/null
-cd .. ; func azure functionapp publish ${azurerm_linux_function_app.fxn.name} --python --linux-fx-version "PYTHON|3.9" ; cd terraform
+cd ../src ; func azure functionapp publish ${azurerm_linux_function_app.fxn.name} --python --linux-fx-version "PYTHON|3.9"
 CONTENT
   filename = "./deploy_function_app.sh"
 }
