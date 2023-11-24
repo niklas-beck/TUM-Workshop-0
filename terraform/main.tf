@@ -58,7 +58,7 @@ resource "azurerm_linux_function_app" "fxn" {
     application_insights_key               = azurerm_application_insights.logging.instrumentation_key
     application_insights_connection_string = azurerm_application_insights.logging.connection_string
     application_stack {
-      python_version = "3.7"
+      python_version = "3.9"
     }
   }
 
