@@ -15,7 +15,7 @@ env:
 
 jobs:
   terraform-plan:
-    name: 'Terraform Plan'
+    name: 'Terraform Destroy'
     runs-on: ubuntu-latest
     env:
       #this is needed since we are running terraform with read-only permissions

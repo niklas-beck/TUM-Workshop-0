@@ -72,6 +72,14 @@ jobs:
       run: terraform apply -target=local_file.app_deployment_script -auto-approve
       working-directory: ./terraform/
 
+    # login to Azure to deploy function app
+    - name: Az CLI login
+      uses: azure/login@v1
+      with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+
     - name: Terraform Run Deploy Function Script
       run: sh deploy_function_app.sh
       working-directory: ./terraform/
