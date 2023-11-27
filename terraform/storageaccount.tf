@@ -34,10 +34,6 @@ resource "azurerm_storage_blob" "blob" {
   source                 = each.key
 }
 
-output "blob_url" {
-  value = azurerm_storage_blob.blob[*].url
-}
-
 ##################################################################################
 # Role Assignments
 ##################################################################################
@@ -47,5 +43,5 @@ output "blob_url" {
 resource "azurerm_role_assignment" "functionToStorage" {
   scope              = azurerm_storage_account.storage_account.id
   role_definition_name = "Storage Blob Data Owner"
-  principal_id         = azurerm_linux_function_app.fxn.identity[0].principal_id
+  principal_id         = azurerm_linux_function_app.fxn.identity.principal_id
 }
