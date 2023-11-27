@@ -67,6 +67,10 @@ resource "azurerm_linux_function_app" "fxn" {
     SCM_DO_BUILD_DURING_DEPLOYMENT = true
   }
 
+  identity {
+    type = "SystemAssigned"
+  }
+
   tags = {
     "CostCenter" = "SpikeReply"
   }
