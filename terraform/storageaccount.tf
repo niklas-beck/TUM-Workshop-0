@@ -35,7 +35,7 @@ resource "azurerm_storage_blob" "blob" {
 }
 
 output "blob_url" {
-  value = azurerm_storage_blob.blob.url
+  value = azurerm_storage_blob.blob[*].url
 }
 
 ##################################################################################
