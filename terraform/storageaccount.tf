@@ -40,8 +40,8 @@ resource "azurerm_storage_blob" "blob" {
 
 // https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles#storage-blob-data-owner
 // Provides full access to Azure Storage blob containers and data
-resource "azurerm_role_assignment" "functionToStorage" {
-  scope              = azurerm_storage_account.storage_account.id
-  role_definition_name = "Storage Blob Data Owner"
-  principal_id         = azurerm_linux_function_app.fxn.identity[0].principal_id
-}
+//resource "azurerm_role_assignment" "functionToStorage" {
+//  scope              = azurerm_storage_account.storage_account.id
+//  role_definition_name = "Storage Blob Data Owner"
+//  principal_id         = azurerm_linux_function_app.fxn.identity[0].principal_id
+//}

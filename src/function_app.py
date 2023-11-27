@@ -2,6 +2,8 @@ import azure.functions as func
 from azure.storage.blob import BlobClient
 import logging
 
+BASENAME = "tumworkshop0"
+
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 
 @app.route(route="http-trigger")
@@ -29,7 +31,7 @@ def http_trigger(req: func.HttpRequest) -> func.HttpResponse:
 def get_file(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python get_file function processed a request.')
 
-    blob_client = BlobClient.from_blob_url("https://tum-workshop.blob.core.windows.net/container1/sample.txt")
+    blob_client = BlobClient.from_blob_url(f"https://{BASENAME}.blob.core.windows.net/container1/sample.txt")
     download_stream = blob_client.download_blob()
 
     return func.HttpResponse(
