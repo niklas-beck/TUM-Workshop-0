@@ -112,3 +112,22 @@ The Azure portal offers a great way to quickly create resources and get an overv
 
  # Part 2
 
+In a real production environment however, you will rarely create resources via the Azure portal. 
+This is due to the fact that manually clicking in a WebUI is prone to errors and inconsitency.
+
+Instead, we use Infrastructure as Code (IaC) to provision our resources.
+One of the main players on the market for IaC is [Terraform](https://terraform.io).
+
+You do not need to fully understand the ```terraform/*.tf``` files in this repository, but please take 2 minutes to browse the files and have a look at their content. \
+Notice that these files define so called ```resources```.
+Each resource represents a single component (e.g. a virtual machine) of our cloud architecture.
+
+To deploy these resources to the cloud, we use a simple Github Actions pipeline defined in ```.github/workflows/tf-apply.yml```.
+
+The main component of our defined architecture is an **Azure function App**, which is a serverless function that executes simple python code in the cloud and can be triggered via a simple HTTP request.
+
+Your task is to deploy the infrastructure and play around with the code of your Azure function.
+
+## Deploying the cloud Resources
+
+tbd.
