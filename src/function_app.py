@@ -1,9 +1,10 @@
 import azure.functions as func
+from azure.storage.blob import BlobClient
 import logging
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 
-@app.route(route="http_trigger")
+@app.route(route="http-trigger")
 def http_trigger(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
 
@@ -23,3 +24,15 @@ def http_trigger(req: func.HttpRequest) -> func.HttpResponse:
              "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.",
              status_code=200
         )
+    
+@app.route(route="get-file")
+def get_file(req: func.HttpRequest) -> func.HttpResponse:
+    logging.info('Python get_file function processed a request.')
+
+    blob_client = BlobClient.from_blob_url("https://tum-workshop.blob.core.windows.net/container1/sample.txt")
+    download_stream = blob_client.download_blob()
+
+    return func.HttpResponse(
+        download_stream.readall(),
+        status_code=200
+    )
