@@ -1,6 +1,4 @@
 import azure.functions as func
-from azure.storage.blob import BlobClient
-from azure.identity import  DefaultAzureCredential
 import logging
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
