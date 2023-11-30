@@ -194,7 +194,98 @@ To use your Azure Function App, search **Function App** in the Azure portal.
 
 You will see a list of all Function Apps that you have access to which includes your own, but also the ones from your fellow students.
 
-Select your own Function App
+Select your own Function App (called e.g. *funcApp-tumworkshopapple*)
 
+![Azure Function App](doc/Func_app_1.png)
 
+In the **Functions** tab you can see a list of all currently published functions. Right now there is only one function called *http_trigger*.
 
+Click on **http_trigger**.
+
+Now, at the top click on **Get Function Url** and copy the Url to your clipboard.
+
+Paste the Url in your browser or your favourite API tool (e.g. curl or postman).
+
+The function answers your HTTP request with a specific text.
+
+Now, have a look again at the python code and try to get a different text by changing your HTTP request.
+
+<details>
+    <summary><strong>Hint</strong></summary>
+
+How can a HTTP request be customized?
+Headers, Query parameters, Body?
+
+<details>
+    <summary><strong>Another Hint</strong></summary>
+      
+set a specific query parameter!
+
+<details>
+    <summary><strong>Give me the solution!</strong></summary>
+      
+https://***your-function-name***.azurewebsites.net/api/http-trigger?name=John
+
+</details>
+
+</details>
+
+</details>
+
+## Add a new function
+
+The current function is published at ```https://your-function-name.azurewebsites.net/api/http-trigger```
+
+We want to add a new function to the code to offer a new method on a different path (maybe now ```/sum```).
+
+Create a new function that offers a simple sum of two integers ```a``` and ```b```.
+
+Adjust the python code, push to your repository and redeploy your new code via Github actions pipeline as previously.
+
+<details>
+    <summary><strong>I am too lazy to write the code myself.</strong></summary>
+
+Too bad! I won't help you here.
+
+<details>
+    <summary><strong>ok ok, maybe just the header?</strong></summary>
+
+```
+@app.route(route="sum")
+def sum(req: func.HttpRequest) -> func.HttpResponse:
+    ...
+```
+
+<details>
+    <summary><strong>I am still lost. Give me the complete function.</strong></summary>
+
+```
+@app.route(route="sum")
+def sum(req: func.HttpRequest) -> func.HttpResponse:
+
+    a = req.params.get('a')
+    b = req.params.get('b')
+    if (not a) or (not b):
+        try:
+            req_body = req.get_json()
+        except ValueError:
+            pass
+        else:
+            a = req_body.get('a')
+            b = req_body.get('b')
+
+    if a and b:
+        sum_a_b = a + b
+        return func.HttpResponse(f"The sum of {a} and {b} is {sum_a_b}")
+    else:
+        return func.HttpResponse(
+             'Please provide two Integers as query parameters for "a" and "b"',
+             status_code=200
+        )
+```
+
+</details>
+
+</details>
+
+</details>
