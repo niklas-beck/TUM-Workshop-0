@@ -265,17 +265,18 @@ def sum(req: func.HttpRequest) -> func.HttpResponse:
 
     a = req.params.get('a')
     b = req.params.get('b')
-    if (not a) or (not b):
-        try:
-            req_body = req.get_json()
-        except ValueError:
-            pass
-        else:
-            a = req_body.get('a')
-            b = req_body.get('b')
+
+    try:
+        a = int(a)
+        b = int(b)
+    except ValueError:
+        return func.HttpResponse(
+            f'The values of "a" and "b" are not Integers :(', 
+            status_code=400
+        )
 
     if a and b:
-        sum_a_b = a + b
+        sum_a_b = int(a) + int(b)
         return func.HttpResponse(f"The sum of {a} and {b} is {sum_a_b}")
     else:
         return func.HttpResponse(
@@ -289,3 +290,14 @@ def sum(req: func.HttpRequest) -> func.HttpResponse:
 </details>
 
 </details>
+
+After your new function has been deployed, please test it out and enjoy your new online calculator :D
+
+## Conclusion
+
+Congratulations! You finished the second part of the hands-on workshop today!
+
+You got a first glimps of the magic world of Infrastructure-as-code and developed your first own serverless function.
+Finally you deployed it to the cloud in a true DevOps approach via an automated Github Actions pipeline.
+
+Feel free to help your fellow students or continue browsing the Azure portal to discover the wide range of cloud native services :)

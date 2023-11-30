@@ -35,17 +35,18 @@ def sum(req: func.HttpRequest) -> func.HttpResponse:
 
     a = req.params.get('a')
     b = req.params.get('b')
-    if (not a) or (not b):
-        try:
-            req_body = req.get_json()
-        except ValueError:
-            pass
-        else:
-            a = req_body.get('a')
-            b = req_body.get('b')
+
+    try:
+        a = int(a)
+        b = int(b)
+    except ValueError:
+        return func.HttpResponse(
+            f'The values of "a" and "b" are not Integers :(', 
+            status_code=400
+        )
 
     if a and b:
-        sum_a_b = a + b
+        sum_a_b = int(a) + int(b)
         return func.HttpResponse(f"The sum of {a} and {b} is {sum_a_b}")
     else:
         return func.HttpResponse(
